@@ -16,12 +16,12 @@
               :wrapper-col="formItemLayout.wrapperCol"
             >
               <a-input v-decorator="[
-          'itemid']" placeholder="输入运单号" />
+          'goodId']" placeholder="输入运单号" />
             </a-form-item>
 
             <a-form-item v-bind="formItemLayout" label="取件时间">
               <a-date-picker
-                v-decorator="['dateTime', config]"
+                v-decorator="['loaclDateTime']"
                 show-time
                 format="YYYY-MM-DD HH:mm:ss"
               />
@@ -39,13 +39,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'   
 export default {
   name: "addGood",
 
   data() {
     return {
       form: this.$form.createForm(this),
-
+      goodId:'',
+      loaclDateTime:null,
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -60,6 +62,10 @@ export default {
   },
 
   methods: {
+        ...mapActions([
+      'addItem', // map `this.getAllItem()` to `this.$store.dispatch('getAllItem')`
+      
+    ]),
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, fieldsValue) => {
@@ -68,13 +74,26 @@ export default {
         }
         const values = {
           ...fieldsValue,
-          dateTime: fieldsValue["dateTime"].format("YYYY-MM-DD HH:mm:ss")
+          goodId:fieldsValue["goodId"],
+          loaclDateTime: fieldsValue["loaclDateTime"],
         };
-        console.log("Received values of form: ", values);
-      });
+      
+        if(values!=null){
+ 
+          let item={
+              goodId:values.goodId,
+              loaclDateTime:values.loaclDateTime,
+              
+          }
+          this.addItem(item);
+          this.goodId='';
+          this.loaclDateTime='';   
+          
+        }
+      })
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
