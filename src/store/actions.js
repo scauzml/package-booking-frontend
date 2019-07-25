@@ -29,31 +29,19 @@ export default{
     },
     
     getAllItem({commit}){
-
-    axios.get("http://localhost:8082/to-list-entitys").then(
+     commit("cleanTodo");
+    axios.get("http://localhost:8888/packages").then(
      res=>{
          if(res.data.length>0){
-            res.data.map(e=>{
-                
+             console.log(res.data);
+            res.data.map(e=>{      
                 let item={};
                 item.id=e.id;
-                item.title=e.title;
-    
-                if(e.isChecked===0){
-                    item.state=false;
-                }else{
-                    item.state=true;
-                }
-                if(e.isEven===0){
-                    item.isEven=false;
-                }else{
-                    item.isEven=true;
-    
-                }
-    
+                item.customerName=e.customerName;
+                item.phone =e.phone;
+                item.state=e.state;
+                item.loaclDateTime=e.loaclDateTime     
                 commit("addTodos1",item);
-    
-    
             }) 
          }
         
@@ -62,28 +50,43 @@ export default{
                 alert(reason)
     });
     },
-    changeState({commit},item){
-       
-       axios.put("http://localhost:8082/to-list-entitys/"+item.id,item).then(
-           e=>{
+    getItemByState({commit},state){
 
-            item.state=!item.state;
-           }
+        axios.get("http://localhost:8888/packages?state="+state).then(
+         res=>{
+            
+                
+                // res.data.map(e=>{      
+                //     let item={};
+                //     item.id=e.id;
+                //     item.customerName=e.customerName;
+                //     item.phone =e.phone;
+                //     item.state=e.state;
+                //     item.loaclDateTime=e.loaclDateTime     
+                    
+                // }) 
+                commit("changeTodos",res.data);
+            
+            
+            
+         }
        ).catch(reason => {
-        alert(reason)
-      });  
-    },
-    removeItem({commit},item){
-        axios.delete("http://localhost:8082/to-list-entitys/"+item.id).then(
-            e=>{
-               
-                commit("remove",item);
-            }
-        ).catch(reason => {
-         alert(reason)
-       });  
+                    alert(reason)
+        });
+        },
 
-
+    changeState({commit},item){
+        if(item.state!="未预约"){
+            axios.put("http://localhost:8888/packages/"+item.id,item).then(
+                e=>{
+                   commit("changeState",item);
+    
+                }
+            ).catch(reason => {
+             alert(reason)
+           });  
+        }
+     
     }
 
      

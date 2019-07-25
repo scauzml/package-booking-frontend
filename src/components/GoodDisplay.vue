@@ -1,40 +1,33 @@
 <template>
-  <div class="GoodDisplay">
+  <div class="">
     <a-row type="flex" :gutter="10">
       <a-col :span="3">菜鸟驿站</a-col>
       <a-col :span="3"></a-col>
       <a-col :span="3">
-        <a-button>ALL</a-button>
+        <a-button @click="showAll">ALL</a-button>
       </a-col>
       <a-col :span="3">
-        <a-button>已预约</a-button>
+        <a-button @click="showBooked">已预约</a-button>
       </a-col>
       <a-col :span="3">
-        <a-button>已取件</a-button>
+        <a-button @click="showPacked">已取件</a-button>
       </a-col>
       <a-col :span="3">
-        <a-button>未预约</a-button>
+        <a-button @click="showNotPacked">未预约</a-button>
       </a-col>
       <a-col :span="3">
         <a-button @click="showModal">添加</a-button>
       </a-col>
     </a-row>
-    <a-row type="flex">
-      <a-table bordered :dataSource="dataSource" :columns="columns">
+   
+      <a-table  :dataSource="showItems" :columns="columns" >
         <template slot="name" slot-scope="text, record">
-          <editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)" />
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-popconfirm
-            v-if="dataSource.length"
-            title="Sure to delete?"
-            @confirm="() => onDelete(record.key)"
-          >
-            <a href="javascript:;">确认收货</a>
-          </a-popconfirm>
+        <a-button @click="changeRecored(record)">确认收货</a-button>
         </template>
       </a-table>
-    </a-row>
+    
     <div>
       <a-modal
         title
@@ -44,48 +37,42 @@
         @cancel="handleCancel"
       >
         <div class="modalform">
+          <a-row type="flex" justify="center">
+            <a-col :span="3">包裹入库</a-col>
+          </a-row>
 
-      
-        <a-row type="flex" justify="center">
-          <a-col :span="3">包裹入库</a-col>
-        </a-row>
-
-        <a-row type="flex" justify="center">
-          <a-col :span="3">订单号:</a-col>
-          <a-col :span="3">
-            <a-input placeholder="id" v-model="package.id" >
-            </a-input>
-          </a-col>
-        </a-row>
-        <a-row type="flex" justify="center">
-          <a-col :span="3">收件人:</a-col>
-          <a-col :span="3">
-            <a-input placeholder="recipient" v-model="package.customerName" >
-            </a-input>
-          </a-col>
-        </a-row>
-<a-row type="flex" justify="center">
-          <a-col :span="3">电话:</a-col>
-          <a-col :span="3">
-            <a-input placeholder="phone" v-model="package.phone" >
-            </a-input>
-          </a-col>
-        </a-row>
-        <a-row type="flex" justify="center">
-          <a-col :span="3">重量:</a-col>
-          <a-col :span="3">
-            <a-input placeholder="weight" v-model="package.weigth" >
-            </a-input>
-          </a-col>
-        </a-row>
-          </div>
+          <a-row type="flex" justify="center">
+            <a-col :span="3">订单号:</a-col>
+            <a-col :span="3">
+              <a-input placeholder="id" v-model="package.id"></a-input>
+            </a-col>
+          </a-row>
+          <a-row type="flex" justify="center">
+            <a-col :span="3">收件人:</a-col>
+            <a-col :span="3">
+              <a-input placeholder="recipient" v-model="package.customerName"></a-input>
+            </a-col>
+          </a-row>
+          <a-row type="flex" justify="center">
+            <a-col :span="3">电话:</a-col>
+            <a-col :span="3">
+              <a-input placeholder="phone" v-model="package.phone"></a-input>
+            </a-col>
+          </a-row>
+          <a-row type="flex" justify="center">
+            <a-col :span="3">重量:</a-col>
+            <a-col :span="3">
+              <a-input placeholder="weight" v-model="package.weigth"></a-input>
+            </a-col>
+          </a-row>
+        </div>
       </a-modal>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'  
+import { mapActions } from "vuex";
 import addGoodFromBoos from "./addGoodFromBoss";
 export default {
   name: "GoodDisplay",
@@ -95,58 +82,38 @@ export default {
   data() {
     return {
       form: this.$form.createForm(this),
-       package:{
-        id:'',
-        customerName:'',
-        phone:'',
-        weigth:'',
-       },
-      formItemLayout: {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 }
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 }
-        }
+      package: {
+        id: "",
+        customerName: "",
+        phone: "",
+        weigth: ""
       },
-      dataSource: [
-        {
-          key: "0",
-          itemid: "Edward King 0",
-          recipient: "32",
-          phone: "London, Park Lane no. 0",
-          state: "已取件",
-          time: "ddd",
-        }
-      ],
-      count: 2,
+      dataSource: [],
       columns: [
         {
-          title: "itemid",
-          dataIndex: "itemid",
+          title: "运单号",
+          dataIndex: "id",
           width: "30%",
-          scopedSlots: { customRender: "itemid" }
+          scopedSlots: { customRender: "id" }
         },
         {
-          title: "recipient",
-          dataIndex: "recipient"
+          title: "收件人",
+          dataIndex: "customerName"
         },
         {
           title: "phone",
           dataIndex: "phone"
         },
         {
-          title: "state",
+          title: "状态",
           dataIndex: "state"
         },
         {
-          title: "time",
-          dataIndex: "time"
+          title: "预约时间",
+          dataIndex: "loaclDateTime"
         },
         {
-          title: "operation",
+          title: "操作",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" }
         }
@@ -156,10 +123,20 @@ export default {
     };
   },
 
+  computed: {
+    showItems() {
+      return this.$store.getters.getTodos;
+    }
+  },
+  created() {
+    this.getAllItem();
+  },
   methods: {
-         ...mapActions([
-      'addItemFromBoss', // map `this.getAllItem()` to `this.$store.dispatch('getAllItem')`
-      
+    ...mapActions([
+      "addItemFromBoss", // map `this.getAllItem()` to `this.$store.dispatch('getAllItem')`
+      "getAllItem",
+      "getItemByState",
+      "changeState"
     ]),
     handleSubmit(e) {
       e.preventDefault();
@@ -171,41 +148,58 @@ export default {
           ...fieldsValue,
           dateTime: fieldsValue["dateTime"].format("YYYY-MM-DD HH:mm:ss")
         };
-        console.log("Received values of form: ", values);
+     
       });
     },
-    onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.key !== key);
+    onChange(key) {
+    //   const dataSource = [...this.dataSource];
+    //   this.dataSource = dataSource.filter(item => item.key !== key);
     },
     showModal() {
       this.visible = true;
     },
     handleOk(e) {
-       if(this.package.customerName!=''&&this.package.phone!=''&&this.package.weigth!=''){
-           let item={
-               id:this.package.id,
-              customerName: this.package.customerName,
-              phone:this.package.phone,
-              weight:this.package.weigth,
-              state:'未预约'            
-          }
+      if (
+        this.package.customerName != "" &&
+        this.package.phone != "" &&
+        this.package.weigth != ""
+      ) {
+        let item = {
+          id: this.package.id,
+          customerName: this.package.customerName,
+          phone: this.package.phone,
+          weight: this.package.weigth,
+          state: "未预约"
+        };
 
         this.addItemFromBoss(item);
 
         setTimeout(() => {
-        this.visible = false;
-        this.confirmLoading = false;
-      }, 2000);
-
-       }
+          this.visible = false;
+          this.confirmLoading = false;
+        }, 2000);
+      }
     },
     handleCancel(e) {
       this.visible = false;
+    },
+    showAll() {
+      this.getAllItem();
+    },
+    showBooked(){
+      this.getItemByState("已预约")
+    },
+    showPacked(){
+       this.getItemByState("已取件")
+    },
+    showNotPacked(){
+      this.getItemByState("未预约")
+    },
+    changeRecored(recoed){
+        this.changeState(recoed);
     }
   }
 };
 </script>
-
 <style scoped lang="scss">
 </style>

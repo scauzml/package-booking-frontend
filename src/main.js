@@ -6,6 +6,7 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
+
 import addGood from './components/addGood'
 import addGoodFromBoos from './components/addGoodFromBoss'
 import GoodDisplay from './components/GoodDisplay'
@@ -14,7 +15,6 @@ import GoodDisplay from './components/GoodDisplay'
 Vue.config.productionTip = false
 Vue.use(Antd)
 Vue.use(VueRouter);
-Vue.use(axios);
 Vue.prototype.$axios = axios;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';           //配置请求头
 

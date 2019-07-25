@@ -39,15 +39,15 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'   
+import { mapActions } from "vuex";
 export default {
   name: "addGood",
 
   data() {
     return {
       form: this.$form.createForm(this),
-      goodId:'',
-      loaclDateTime:null,
+      goodId: "",
+      loaclDateTime: null,
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -62,9 +62,8 @@ export default {
   },
 
   methods: {
-        ...mapActions([
-      'addItem', // map `this.getAllItem()` to `this.$store.dispatch('getAllItem')`
-      
+    ...mapActions([
+      "addItem" // map `this.getAllItem()` to `this.$store.dispatch('getAllItem')`
     ]),
     handleSubmit(e) {
       e.preventDefault();
@@ -74,26 +73,23 @@ export default {
         }
         const values = {
           ...fieldsValue,
-          goodId:fieldsValue["goodId"],
-          loaclDateTime: fieldsValue["loaclDateTime"],
+          goodId: fieldsValue["goodId"],
+          loaclDateTime: fieldsValue["loaclDateTime"]
         };
-      
-        if(values!=null){
- 
-          let item={
-              goodId:values.goodId,
-              loaclDateTime:values.loaclDateTime,
-              
-          }
+
+        if (values != null) {
+          let item = {
+            goodId: values.goodId,
+            loaclDateTime: values.loaclDateTime
+          };
           this.addItem(item);
-          this.goodId='';
-          this.loaclDateTime='';   
-          
+          this.goodId = "";
+          this.loaclDateTime = "";
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
